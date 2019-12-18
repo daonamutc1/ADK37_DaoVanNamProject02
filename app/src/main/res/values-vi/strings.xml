@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ADK37_DaoVanNamProject</string>
+    <string name="daily">5 ngày</string>
+    <string name="hourly">Hàng giờ</string>
+    <string name="humidity">Độ ẩm</string>
+    <string name="location">VỊ TRÍ</string>
+    <string name="psunny">Một phần nắng</string>
+    <string name="seach">Tìm kiếm</string>
+    <string name="setting">Cài đặt</string>
+    <string name="sunny">Nắng</string>
+    <string name="WrongL">Sai vị trí</string>
+    <string name="Add">Thêm</string>
+    <string name="Delete">Xóa</string>
+    <string name="today">Hôm  nay</string>
+    <string name="AccuWeather">Dự báo thời tiết</string>
+    <string name="updated">"Cập nhật lúc: "</string>
+    <string name="added">Đã thêm</string>
+    <string name="deleted">Đã xóa</string>
+    <string name="MenuList">Danh sách</string>
+    <string name="cancel">Hủy</string>
+    <string name="update">Cập nhật</string>
+    <string name="hourlychartC">Hàng giờ (°C)</string>
+    <string name="dailychartC">5 ngày (°C)</string>
+    <string name="dailychartF">5 ngày (°F)</string>
+    <string name="hourlychartF">Hàng giờ (°F)</string>
+    <string name="tileGPS">Không có GPS</string>
+    <string name="notfindGPS">Không tìm thấy vị trí của bạn</string>
+    <string name="messGPS">Vui lòng bật GPS</string>
+    <string name="KEYMAP">AIzaSyBE5WFkZnG_YLgmhuZTdqfCFyFWV5LoCmw</string>
+    <string name="seachByMap">Tìm kiếm trên bản đồ</string>
+</resources>

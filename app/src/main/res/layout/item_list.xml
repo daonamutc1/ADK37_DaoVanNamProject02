@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_50sdp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_49sdp"
+        android:orientation="horizontal"
+        android:background="@drawable/background_khongmau">
+        <LinearLayout
+            android:layout_width="@dimen/_220sdp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNameList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="tvNameList"
+                android:textColor="@color/textwhite"
+                android:textSize="@dimen/_15sdp"></TextView>
+
+            <TextView
+                android:id="@+id/tvDateList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thứ 5 ngày 21/10 22:00"
+                android:textColor="@color/textwhite"
+                android:textSize="@dimen/_10sdp"></TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgClousList"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:src="@drawable/search"></ImageView>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/tvTempList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="25°C"
+                    android:textColor="@color/textwhite"
+                    android:textSize="@dimen/_15sdp"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/tvTempMaxList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="27°/"
+                    android:textColor="@color/textwhite"
+                    android:textSize="@dimen/_10sdp"></TextView>
+
+                <TextView
+                    android:id="@+id/tvTempMinList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23°"
+                    android:textColor="@color/textwhite"
+                    android:textSize="@dimen/_10sdp"></TextView>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

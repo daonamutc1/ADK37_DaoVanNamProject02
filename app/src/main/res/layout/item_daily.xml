@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_60sdp"
+    android:layout_height="@dimen/_120sdp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/_59sdp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tvDayDaily"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="today"
+            android:textColor="@color/textwhite"></TextView>
+
+        <ImageView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:id="@+id/imCloudtDaily"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_20sdp"
+            android:gravity="center_horizontal"
+            android:src="@drawable/nhieumay"></ImageView>
+        <LinearLayout
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:src="@drawable/icondoam">
+            </ImageView>
+            <TextView
+                android:id="@+id/tvHumidityDaily"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="25%"
+                android:textColor="@color/textwhite"></TextView>
+        </LinearLayout>
+
+        <!--android:drawableLeft="@mipmap/ic_seach"-->
+        <TextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:id="@+id/tvTempMaxDaily"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="28"
+            android:textColor="@color/textwhite"></TextView>
+
+        <TextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:id="@+id/tvTempMinDaily"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="20"
+            android:textColor="@color/textwhite"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lnkedaily"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_kedoc"
+        android:orientation="horizontal">
+    </LinearLayout>
+</LinearLayout>

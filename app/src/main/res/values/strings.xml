@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">ADK37_DaoVanNamProject</string>
+    <string name="setting">Setting</string>
+    <string name="seach">Seach</string>
+    <string name="seachByMap">Seach by Map</string>
+    <string name="Add">Add</string>
+    <string name="Delete">Delete</string>
+    <!--    Hàng giờ-->
+    <string name="hourly">Hourly</string>
+    <!--    Hàng ngày-->
+    <string name="daily">Daily</string>
+    <!--    Trạng thái thời tiết-->
+    <!--    nắng-->
+    <string name="sunny">Sunny</string>
+    <!--    nắng nhẹ-->
+    <string name="psunny">Partly sunny</string>
+    <!--    Độ ẩm-->
+    <string name="humidity">Humidity</string>
+    <string name="WrongL">wrong location</string>
+    <string name="location">Locaition</string>
+    <string name="today">Today</string>
+    <string name="AccuWeather">AccuWeather</string>
+    <string name="updated">"Update to: "</string>
+    <string name="added">Added</string>
+    <string name="deleted">Deleted</string>
+    <string name="MenuList">List</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="hourlychartC">Hourly (°C)</string>
+    <string name="dailychartC">Daily (°C)</string>
+    <string name="dailychartF">Daily (°F)</string>
+    <string name="hourlychartF">Hourly (°F)</string>
+    <string name="messGPS">Please Turn ON your GPS Connection</string>
+    <string name="notfindGPS">Unble to Trace your location</string>
+    <string name="tileGPS">No GPS</string>
+<!--    Key API googlemap-->
+    <string name="KEYMAP">AIzaSyBE5WFkZnG_YLgmhuZTdqfCFyFWV5LoCmw</string>
+</resources>

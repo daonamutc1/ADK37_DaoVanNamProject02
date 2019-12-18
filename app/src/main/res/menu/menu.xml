@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menuUpdate"
+        android:title="@string/update"></item>
+    <item
+        android:id="@+id/menuSearch"
+        android:title="@string/seach"></item>
+    <item
+        android:id="@+id/menuSearchByMap"
+        android:title="@string/seachByMap"></item>
+    <item
+        android:id="@+id/menuDoC"
+        android:title="°C"></item>
+    <item
+        android:id="@+id/menuDoF"
+        android:title="°F"></item>
+    <item
+        android:id="@+id/menuAdd"
+        android:title="@string/Add"></item>
+    <item
+        android:id="@+id/menuXoa"
+        android:title="@string/Delete"></item>
+    <item
+        android:id="@+id/menuList"
+        android:title="@string/MenuList"></item>
+</menu>

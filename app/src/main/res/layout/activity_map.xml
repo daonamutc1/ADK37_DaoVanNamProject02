@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.search.ViewMap">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/fraMap"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/linesearch"></fragment>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/background_nen"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/_5sdp">
+
+            <LinearLayout
+                android:layout_width="@dimen/_220sdp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvNameSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="tvNameCty"
+                    android:textColor="@color/textwhite"
+                    android:textSize="@dimen/_15sdp"
+                    android:paddingBottom="@dimen/_5sdp"></TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imgClousSearch"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:src="@drawable/icondoam"></ImageView>
+
+                    <TextView
+                        android:id="@+id/tvTempSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="25°C"
+                        android:textColor="@color/textwhite"
+                        android:textSize="@dimen/_15sdp"
+                        android:paddingBottom="@dimen/_5sdp"></TextView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvAddSearch"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/textwhite"
+                    android:textSize="@dimen/_15sdp"
+                    android:text="@string/Add">
+                </TextView>
+            </LinearLayout>
+        </LinearLayout>
+        <ProgressBar
+            android:id="@+id/prbViewMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_130sdp"
+            android:layout_marginTop="@dimen/_200sdp"
+            android:visibility="gone"></ProgressBar>
+    </RelativeLayout>
+</layout>
