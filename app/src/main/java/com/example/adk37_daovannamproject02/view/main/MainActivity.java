@@ -17,22 +17,21 @@ import android.widget.AdapterView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import com.example.adk37_daovannamproject02.R;
+import com.example.adk37_daovannamproject02.SaveData.SQLHelper;
 import com.example.adk37_daovannamproject02.adapter.AdapterListView;
 import com.example.adk37_daovannamproject02.adapter.AdapterSlide;
 import com.example.adk37_daovannamproject02.databinding.ActivityMainBinding;
 import com.example.adk37_daovannamproject02.model.ObjectACity;
-import com.example.adk37_daovannamproject02.uliti.Defile;
 import com.example.adk37_daovannamproject02.uliti.JobServices;
-import com.example.adk37_daovannamproject02.uliti.SharedPreferenceclass;
 import com.example.adk37_daovannamproject02.view.search.ViewMap;
 
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 public class MainActivity extends AppCompatActivity implements InterfaceMain {
     private static final String TAG = "MainActivity";
@@ -48,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
     InputMethodManager imm;
     //Lấy vị trí hiện tại
     static boolean GPS;
+    //Database
+    SQLHelper sqlHelper;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -55,19 +56,15 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         presenterMain = new PresenterMain(this, MainActivity.this);
+
         presenterMain.progressBar = findViewById(R.id.progress);
+
+        sqlHelper = new SQLHelper(getBaseContext());
         //Bắt sự kiện nhấn enter bàn phím ảo
         imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+        //Lấy dữ liệu từ database cho màn hình khởi động
+        whenOpenApp();
 
-        if (objectACityfulls.size() == 0) {
-            presenterMain.loadBYLoacation(CorFDo);
-            presenterMain.saveNameCity.addAll(SharedPreferenceclass.readfile(MainActivity.this, Defile.SAVE, Defile.SAVEFILENAME));
-            if (presenterMain.saveNameCity.size() == 0) {
-                presenterMain.saveNameCity.add("London");
-                presenterMain.saveNameCity.add("Sơn La");
-            }
-            presenterMain.loadfull(presenterMain.saveNameCity);
-        }
         clickImgMenu();
 
         clickBtnHuy();
@@ -79,11 +76,135 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
         clickImgBackListView();
 
         itemClickListview();
-        if (!isJobServiceOn()){
-            ServiceRun();
+//        if (!isJobServiceOn()) {
+//            ServiceRun();
+//        }
+    }
+
+    private void whenOpenApp() {
+        if (sqlHelper.getAllProduct() != null && sqlHelper.getAllProduct().get(0).getUnit() != null) {
+            if (sqlHelper.getAllProduct().get(0).getUnit().equals("°C")) {
+                setUnitlIsC(true);
+            } else {
+                setUnitlIsC(false);
+            }
+            presenterMain.loadByLoacation(CorFDo);
+            objectACityfulls.addAll(sqlHelper.getAllProduct());
+            binding.tvTimeLoad.setText(objectACityfulls.get(0).getTimeupdate());
+            setAdapterNew(true);
+            presenterMain.progressBar.setVisibility(View.GONE);
+        }
+        //Nếu data trống thì là lần chạy đầu tiên
+        if (objectACityfulls.size() == 0) {
+            setUnitlIsC(true);
+            presenterMain.saveNameCity.add("London");
+            presenterMain.saveNameCity.add("Sơn La");
+            presenterMain.loadByLoacation(CorFDo);
+            presenterMain.loadFull(presenterMain.saveNameCity);
         }
     }
 
+    private void clickImgMenu() {
+        binding.imgmenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                //Tạo popupmenu
+                Context wrapper = new ContextThemeWrapper(getBaseContext(), R.style.PopupMenu);
+                final android.widget.PopupMenu popupMenu = new PopupMenu(wrapper, v);
+                popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
+                //Hiện độ C
+                if (CorF == 1) {
+                    popupMenu.getMenu().findItem(R.id.menuDoC).setVisible(true);
+                    popupMenu.getMenu().findItem(R.id.menuDoF).setVisible(false);
+                    //Hiện độ F
+                } else {
+                    popupMenu.getMenu().findItem(R.id.menuDoC).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.menuDoF).setVisible(true);
+                }
+                //Lấy trang hiện tại
+                pagenumber = binding.viewpager.getCurrentItem();
+                //Thêm hay xóa
+                int addOrDelete = 0;
+                //Kiểm tra vị trí bằng id
+                for (int i = 0; i <sqlHelper.getAllProduct().size(); i++) {
+                    if (objectACityfulls.get(pagenumber).getID() ==sqlHelper.getAllProduct().get(i).getID()) {
+                        addOrDelete = 1;
+                        break;
+                    }
+                }
+                if (addOrDelete == 0) {
+                    //Hiện thêm
+                    popupMenu.getMenu().findItem(R.id.menuAdd).setVisible(true);
+                    popupMenu.getMenu().findItem(R.id.menuXoa).setVisible(false);
+                } else if (addOrDelete != 0 && pagenumber == 0) {
+                    //Khi có trong danh sách nhưng là vị trí hiện tại thì k hiện thêm hay xóa
+                    popupMenu.getMenu().findItem(R.id.menuAdd).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.menuXoa).setVisible(false);
+                } else {
+                    //Hiện xóa
+                    popupMenu.getMenu().findItem(R.id.menuAdd).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.menuXoa).setVisible(true);
+                }
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menuUpdate:
+                                menuUpdate();
+                                break;
+                            case R.id.menuDoC:
+                                changeUnitlIsC(true);
+                                break;
+                            case R.id.menuDoF:
+                                changeUnitlIsC(false);
+//                                save(objectACityfulls);
+                                break;
+                            case R.id.menuSearch:
+                                binding.linesearch.setVisibility(View.VISIBLE);
+                                //Hiện bàn phím android
+                                imm.showSoftInput(binding.edtsearch, InputMethodManager.SHOW_IMPLICIT);
+                                break;
+                            case R.id.menuSearchByMap:
+                                Intent intent = new Intent(MainActivity.this, ViewMap.class);
+                                intent.putExtra("lat", objectACityfulls.get(binding.viewpager.getCurrentItem()).getLat());
+                                intent.putExtra("lon", objectACityfulls.get(binding.viewpager.getCurrentItem()).getLon());
+                                intent.putExtra("CorF", CorFDo);
+                                //Gửi đi bị đóng app
+                                intent.putExtra("objFull", objectACityfulls);
+                                startActivityForResult(intent, 115);
+                                break;
+                            case R.id.menuAdd:
+                                presenterMain.saveNameCity.add(objectACityfulls.get(pagenumber).getNameCity());
+                                presenterMain.arrayID.add(objectACityfulls.get(pagenumber).getID());
+                                save(objectACityfulls);
+                                break;
+                            case R.id.menuXoa:
+                                presenterMain.saveNameCity.remove(pagenumber - 1);
+                                presenterMain.arrayID.remove(pagenumber - 1);
+                                save(objectACityfulls);
+                                int xoa = pagenumber;
+                                objectACityfulls.remove(pagenumber);
+                                setAdapterNew(false);
+                                if (xoa <= presenterMain.saveNameCity.size()) {
+                                    binding.viewpager.setCurrentItem(xoa);
+                                } else {
+                                    binding.viewpager.setCurrentItem(xoa - 1);
+                                }
+                                break;
+                            case R.id.menuList:
+                                binding.relTong.setVisibility(View.GONE);
+                                binding.linList.setVisibility(View.VISIBLE);
+                                AdapterListView adapterListView = new AdapterListView(MainActivity.this, R.layout.item_list, objectACityfulls);
+                                binding.lvList.setAdapter(adapterListView);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+    }
     private void clickImgSearch() {
         binding.imgsearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,111 +246,15 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
             }
         });
     }
-
-    private void clickImgMenu() {
-        binding.imgmenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                //Tạo popupmenu
-                Context wrapper = new ContextThemeWrapper(getBaseContext(), R.style.PopupMenu);
-                final android.widget.PopupMenu popupMenu = new PopupMenu(wrapper, v);
-                popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
-                //Ẩn hiện item trong popupmenu
-                //Độ C hay F
-                if (CorF != 0) {
-                    popupMenu.getMenu().findItem(R.id.menuDoC).setVisible(true);
-                    popupMenu.getMenu().findItem(R.id.menuDoF).setVisible(false);
-                } else {
-                    popupMenu.getMenu().findItem(R.id.menuDoC).setVisible(false);
-                    popupMenu.getMenu().findItem(R.id.menuDoF).setVisible(true);
-                }
-                //Lấy trang hiện tại
-                pagenumber = binding.viewpager.getCurrentItem();
-                //Thêm hay xóa
-                int addordelete = 0;
-                //Kiểm tra vị trí bằng id
-                for (int i = 0; i < presenterMain.arrayID.size(); i++) {
-                    if (objectACityfulls.get(pagenumber).getID() == presenterMain.arrayID.get(i)) {
-                        addordelete = 1;
-                        break;
-                    }
-                }
-                if (addordelete == 0) {
-                    //Hiện thêm
-                    popupMenu.getMenu().findItem(R.id.menuAdd).setVisible(true);
-                    popupMenu.getMenu().findItem(R.id.menuXoa).setVisible(false);
-                } else if (addordelete != 0 && pagenumber == 0) {
-                    //Khi có trong danh sách nhưng là vị trí hiện tại thì k hiện thêm hay xóa
-                    popupMenu.getMenu().findItem(R.id.menuAdd).setVisible(false);
-                    popupMenu.getMenu().findItem(R.id.menuXoa).setVisible(false);
-                } else {
-                    //Hiện xóa
-                    popupMenu.getMenu().findItem(R.id.menuAdd).setVisible(false);
-                    popupMenu.getMenu().findItem(R.id.menuXoa).setVisible(true);
-                }
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menuUpdate:
-                                menuUpdate();
-                                break;
-                            case R.id.menuDoC:
-                                changeunitl();
-                                break;
-                            case R.id.menuDoF:
-                                changeunitl();
-                                break;
-                            case R.id.menuSearch:
-                                binding.linesearch.setVisibility(View.VISIBLE);
-                                //Hiện bàn phím android
-                                imm.showSoftInput(binding.edtsearch, InputMethodManager.SHOW_IMPLICIT);
-                                break;
-                            case R.id.menuSearchByMap:
-                                Intent intent = new Intent(MainActivity.this, ViewMap.class);
-                                intent.putExtra("lat", objectACityfulls.get(binding.viewpager.getCurrentItem()).getLat());
-                                intent.putExtra("lon", objectACityfulls.get(binding.viewpager.getCurrentItem()).getLon());
-                                intent.putExtra("CorF", CorFDo);
-                                //Gửi đi bị đóng app
-                                intent.putExtra("objFull", objectACityfulls);
-                                startActivityForResult(intent, 115);
-                                break;
-                            case R.id.menuAdd:
-                                presenterMain.saveNameCity.add(objectACityfulls.get(pagenumber).getNameCity());
-                                presenterMain.arrayID.add(objectACityfulls.get(pagenumber).getID());
-                                save();
-                                break;
-                            case R.id.menuXoa:
-                                presenterMain.saveNameCity.remove(pagenumber - 1);
-                                presenterMain.arrayID.remove(pagenumber - 1);
-                                save();
-                                int xoa = pagenumber;
-                                objectACityfulls.remove(pagenumber);
-                                setAdapterNew(false);
-                                if (xoa <= presenterMain.saveNameCity.size()) {
-                                    binding.viewpager.setCurrentItem(xoa);
-                                } else {
-                                    binding.viewpager.setCurrentItem(xoa - 1);
-                                }
-                                break;
-                            case R.id.menuList:
-                                binding.relTong.setVisibility(View.GONE);
-                                binding.linList.setVisibility(View.VISIBLE);
-                                AdapterListView adapterListView = new AdapterListView(MainActivity.this, R.layout.item_list, objectACityfulls);
-                                binding.lvList.setAdapter(adapterListView);
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
+    private void save(ArrayList<ObjectACity>listSave) {
+        sqlHelper.deleteNoteAll();
+        sqlHelper.insertProduct(listSave);
     }
 
     private void menuUpdate() {
         ArrayList<String> nameCity = new ArrayList<>();
         if (GPS) {
+            //update bằng API theo tên thành phố
             for (int i = 1; i < objectACityfulls.size(); i++) {
                 nameCity.add(objectACityfulls.get(i).getNameCity());
             }
@@ -241,8 +266,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
         objectACityfulls.clear();
         presenterMain.objectACityfull.clear();
         presenterMain.arrayID.clear();
-        presenterMain.loadBYLoacation(CorFDo);
-        presenterMain.loadfull(nameCity);
+        presenterMain.loadByLoacation(CorFDo);
+        presenterMain.loadFull(nameCity);
     }
 
     private void search() {
@@ -252,26 +277,42 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
         binding.edtsearch.setText("");
     }
 
-    public void changeunitl() {
+    public void setUnitlIsC(boolean isC) {
         int vitri = binding.viewpager.getCurrentItem();
-        if (CorF != 0) {
+        //Chuyển từ F sang C
+        if (isC) {
             CorF = 0;
             CorFDo = 274.15;
-            presenterMain.changeunitl(CorF);
-            setAdapterNew(false);
         } else {
+            //Chuyển từ C sang F
             CorF = 1;
             CorFDo = 0.0;
-            presenterMain.changeunitl(CorF);
-            setAdapterNew(false);
         }
         binding.viewpager.setCurrentItem(vitri);
     }
-
-    private void save() {
-        SharedPreferenceclass.save(MainActivity.this, Defile.SAVE, presenterMain.saveNameCity, Defile.SAVEFILENAME);
+    private void changeUnitlIsC(boolean isC){
+        int vitri = binding.viewpager.getCurrentItem();
+        //Chuyển từ F sang C
+        if (isC) {
+            CorF = 0;
+            CorFDo = 274.15;
+            presenterMain.objectACityfull.clear();
+            presenterMain.objectACityfull.addAll(objectACityfulls);
+            presenterMain.setUnitl(CorF);
+            setAdapterNew(false);
+            save(objectACityfulls);
+        } else {
+            //Chuyển từ C sang F
+            CorF = 1;
+            CorFDo = 0.0;
+            presenterMain.objectACityfull.clear();
+            presenterMain.objectACityfull.addAll(objectACityfulls);
+            presenterMain.setUnitl(CorF);
+            setAdapterNew(false);
+            save(objectACityfulls);
+        }
+        binding.viewpager.setCurrentItem(vitri);
     }
-
     private void clickImgBackListView() {
         binding.imgBacklistview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,40 +333,6 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                 binding.viewpager.setCurrentItem(position);
             }
         });
-    }
-
-    @Override
-    public void loadfullCity(ArrayList<ObjectACity> objectACity) {
-        objectACityfulls.clear();
-        objectACityfulls.addAll(objectACity);
-        setAdapterNew(true);
-        //Cập nhật lúc
-        binding.tvTimeLoad.setText(objectACityfulls.get(0).getTimeupdate());
-    }
-
-    @Override
-    public void loadACityForSearch(ObjectACity objectACity, int vitrit) {
-        if (vitrit != -1) {
-            //Nếu có trong danh sách, chuyển đến trang có tp đó
-            setAdapterNew(false);
-            binding.viewpager.setCurrentItem(vitrit);
-        } else {
-            //Nếu không có trong danh sách thì thêm vào và hiển thị đúng vị trí cần
-            objectACityfulls.add(objectACity);
-            setAdapterNew(false);
-            binding.viewpager.setCurrentItem(objectACityfulls.size() - 1);
-        }
-    }
-
-    @Override
-    public void loadlocation(ObjectACity objectACity) {
-        objectACityfulls.add(objectACity);
-        setAdapterNew(true);
-    }
-
-    @Override
-    public void onMessenger(String mes) {
-        Toast.makeText(MainActivity.this, mes, Toast.LENGTH_SHORT).show();
     }
 
     private void setAdapterNew(boolean newOrOld) {
@@ -356,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                         presenterMain.objectACityfull.addAll(objViewMap);
                         setAdapterNew(false);
                         binding.viewpager.setCurrentItem(objectACityfulls.size() - 1);
+                        save(objectACityfulls);
                     }
                 }
                 break;
@@ -378,6 +386,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
             Log.d(TAG, "Job scheduling failed");
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public boolean isJobServiceOn() {
         JobScheduler scheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -386,5 +395,42 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
             hasBeenScheduled = true;
         }
         return hasBeenScheduled;
+    }
+
+    @Override
+    public void loadfullCity(ArrayList<ObjectACity> objectACity) {
+        objectACityfulls.clear();
+        objectACityfulls.addAll(objectACity);
+        setAdapterNew(true);
+        //Cập nhật lúc
+        binding.tvTimeLoad.setText(objectACityfulls.get(0).getTimeupdate());
+        save(objectACity);
+    }
+
+    @Override
+    public void loadACityForSearch(ObjectACity objectACity, int vitrit) {
+        if (vitrit != -1) {
+            //Nếu có trong danh sách, chuyển đến trang có tp đó
+            setAdapterNew(false);
+            binding.viewpager.setCurrentItem(vitrit);
+        } else {
+            //Nếu không có trong danh sách thì thêm vào và hiển thị đúng vị trí cần
+            objectACityfulls.add(objectACity);
+            setAdapterNew(false);
+            binding.viewpager.setCurrentItem(objectACityfulls.size() - 1);
+            save(objectACityfulls);
+        }
+    }
+
+    @Override
+    public void loadlocation(ObjectACity objectACity) {
+        objectACityfulls.add(objectACity);
+        setAdapterNew(true);
+        save(objectACityfulls);
+    }
+
+    @Override
+    public void onMessenger(String mes) {
+        Toast.makeText(MainActivity.this, mes, Toast.LENGTH_SHORT).show();
     }
 }

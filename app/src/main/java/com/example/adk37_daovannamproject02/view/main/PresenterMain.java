@@ -48,13 +48,13 @@ public class PresenterMain {
     }
 
 
-    public void loadfull(ArrayList<String> nameCity) {
+    public void loadFull(ArrayList<String> nameCity) {
         for (int n = 0; n < nameCity.size(); n++) {
             loadByCityName(nameCity.get(n), CorFDo, true);
         }
     }
 
-    public void loadBYLoacation(double unit) {
+    public void loadByLoacation(double unit) {
         if (GetLocationHere.loadGPS(context, context.getResources().getString(R.string.messGPS)) != null) {
             GPSpre = true;
             MainActivity.GPS = true;
@@ -280,7 +280,8 @@ public class PresenterMain {
         }
     }
 
-    public void changeunitl(int i) {
+    public void setUnitl(int i) {
+        //Chuyển sang độ C
         if (i == 0) {
             CorFDo = 274.15;
             CorFStr.delete(0, CorFStr.length());
@@ -298,6 +299,7 @@ public class PresenterMain {
                     objectACityfull.get(x).getDailies().get(y).setTempMin(objectACityfull.get(x).getDailies().get(y).getTempMin() - CorFDo);
                 }
             }
+            //Chuyển sang độ F
         } else {
             CorFDo = -274.15;
             CorFStr.delete(0, CorFStr.length());

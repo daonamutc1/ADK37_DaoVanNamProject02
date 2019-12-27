@@ -3,6 +3,9 @@ package com.example.adk37_daovannamproject02.uliti;
 import java.text.SimpleDateFormat;
 
 public class Defile {
+    public static final String DB_NAME_TABLE = "Product";
+    public static final int DB_VERSION = 2;
+    public static final String DB_NAME = "Product.db";
     //Chung
     public static final String URL_HOME = "http://api.openweathermap.org/data/2.5/";
     public static final String KEY = "9f7bbc8e2c7bce17dcd9f758887603bf";
