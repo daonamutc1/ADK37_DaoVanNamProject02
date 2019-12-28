@@ -31,7 +31,7 @@ public class PresenterMain {
     Context context;
     public ArrayList<ObjectACity> objectACityfull = new ArrayList<>();
     public ArrayList<Integer> arrayID = new ArrayList<>();
-    public ArrayList<String> saveNameCity = new ArrayList<>();
+    public ArrayList<String> runByNameCity = new ArrayList<>();
     StringBuilder strJsonFiveDay = new StringBuilder();
     StringBuilder strJsonCurrent = new StringBuilder();
     Double CorFDo = 274.15;
@@ -54,7 +54,7 @@ public class PresenterMain {
         }
     }
 
-    public void loadByLoacation(double unit) {
+    public void loadByGPS(double unit) {
         if (GetLocationHere.loadGPS(context, context.getResources().getString(R.string.messGPS)) != null) {
             GPSpre = true;
             MainActivity.GPS = true;
@@ -259,7 +259,7 @@ public class PresenterMain {
                     weather.loadfullCity(objectACityfull);
                 } else {
                     if (GPSpre) {
-                        weather.loadlocation(objectACity);
+                        weather.loadByGPS(objectACity);
                     } else {
                         int vitri = -1;
                         //Kiểm tra xem thành phố tìm kiếm có trong danh sách hay không thông qua ID

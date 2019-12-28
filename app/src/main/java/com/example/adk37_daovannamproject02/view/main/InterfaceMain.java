@@ -7,6 +7,6 @@ import java.util.ArrayList;
 public interface InterfaceMain {
     void loadfullCity(ArrayList<ObjectACity> objectACity);
     void loadACityForSearch(ObjectACity objectACity, int vitri);
-    void loadlocation(ObjectACity objectACity);
+    void loadByGPS(ObjectACity objectACity);
     void onMessenger(String mes);
 }

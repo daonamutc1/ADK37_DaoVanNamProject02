@@ -88,19 +88,19 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
             } else {
                 setUnitlIsC(false);
             }
-            presenterMain.loadByLoacation(CorFDo);
+            presenterMain.loadByGPS(CorFDo);
             objectACityfulls.addAll(sqlHelper.getAllProduct());
             binding.tvTimeLoad.setText(objectACityfulls.get(0).getTimeupdate());
             setAdapterNew(true);
             presenterMain.progressBar.setVisibility(View.GONE);
         }
-        //Nếu data trống thì là lần chạy đầu tiên
+        //Nếu data trống thì thêm 2 thành phố dưới này vào
         if (objectACityfulls.size() == 0) {
             setUnitlIsC(true);
-            presenterMain.saveNameCity.add("London");
-            presenterMain.saveNameCity.add("Sơn La");
-            presenterMain.loadByLoacation(CorFDo);
-            presenterMain.loadFull(presenterMain.saveNameCity);
+            presenterMain.runByNameCity.add("London");
+            presenterMain.runByNameCity.add("Sơn La");
+            presenterMain.loadByGPS(CorFDo);
+            presenterMain.loadFull(presenterMain.runByNameCity);
         }
     }
 
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                 //Thêm hay xóa
                 int addOrDelete = 0;
                 //Kiểm tra vị trí bằng id
-                for (int i = 0; i <sqlHelper.getAllProduct().size(); i++) {
-                    if (objectACityfulls.get(pagenumber).getID() ==sqlHelper.getAllProduct().get(i).getID()) {
+                for (int i = 0; i < sqlHelper.getAllProduct().size(); i++) {
+                    if (objectACityfulls.get(pagenumber).getID() == sqlHelper.getAllProduct().get(i).getID()) {
                         addOrDelete = 1;
                         break;
                     }
@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                                 break;
                             case R.id.menuDoF:
                                 changeUnitlIsC(false);
-//                                save(objectACityfulls);
                                 break;
                             case R.id.menuSearch:
                                 binding.linesearch.setVisibility(View.VISIBLE);
@@ -174,8 +173,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                                 startActivityForResult(intent, 115);
                                 break;
                             case R.id.menuAdd:
-                                presenterMain.saveNameCity.add(objectACityfulls.get(pagenumber).getNameCity());
-                                presenterMain.arrayID.add(objectACityfulls.get(pagenumber).getID());
+                                presenterMain.runByNameCity.add(objectACityfulls.get(pagenumber).getNameCity());
                                 save(objectACityfulls);
                                 break;
                             case R.id.menuXoa:
@@ -185,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                                 presenterMain.objectACityfull.addAll(objectACityfulls);
                                 save(objectACityfulls);
                                 setAdapterNew(false);
-                                if (xoa <= presenterMain.saveNameCity.size()) {
+                                if (xoa <= presenterMain.runByNameCity.size()) {
                                     binding.viewpager.setCurrentItem(xoa);
                                 } else {
                                     binding.viewpager.setCurrentItem(xoa - 1);
@@ -205,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
             }
         });
     }
+
     private void clickImgSearch() {
         binding.imgsearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,13 +245,19 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
             }
         });
     }
-    private void save(ArrayList<ObjectACity>listSave) {
-//        Đang bị lỗi lưu thừa vị trí hiện tại
-//        if(GPS){
-//            listSave.remove(listSave.size()-1);
-//        }
-        sqlHelper.deleteNoteAll();
-        sqlHelper.insertProduct(listSave);
+
+    private void save(ArrayList<ObjectACity> listSave) {
+        ArrayList<ObjectACity> list = new ArrayList<>();
+        if (GPS) {
+            for (int i = 1; i < listSave.size(); i++) {
+                list.add(listSave.get(i));
+            }
+            sqlHelper.deleteNoteAll();
+            sqlHelper.insertProduct(list);
+        } else {
+            sqlHelper.deleteNoteAll();
+            sqlHelper.insertProduct(listSave);
+        }
     }
 
     private void menuUpdate() {
@@ -267,10 +272,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                 nameCity.add(objectACityfulls.get(i).getNameCity());
             }
         }
-        objectACityfulls.clear();
         presenterMain.objectACityfull.clear();
-        presenterMain.arrayID.clear();
-        presenterMain.loadByLoacation(CorFDo);
+        presenterMain.loadByGPS(CorFDo);
         presenterMain.loadFull(nameCity);
     }
 
@@ -282,7 +285,6 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
     }
 
     public void setUnitlIsC(boolean isC) {
-        int vitri = binding.viewpager.getCurrentItem();
         //Chuyển từ F sang C
         if (isC) {
             CorF = 0;
@@ -292,9 +294,9 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
             CorF = 1;
             CorFDo = 0.0;
         }
-        binding.viewpager.setCurrentItem(vitri);
     }
-    private void changeUnitlIsC(boolean isC){
+
+    private void changeUnitlIsC(boolean isC) {
         int vitri = binding.viewpager.getCurrentItem();
         //Chuyển từ F sang C
         if (isC) {
@@ -317,6 +319,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
         }
         binding.viewpager.setCurrentItem(vitri);
     }
+
     private void clickImgBackListView() {
         binding.imgBacklistview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -337,16 +340,6 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                 binding.viewpager.setCurrentItem(position);
             }
         });
-    }
-
-    private void setAdapterNew(boolean newOrOld) {
-        if (newOrOld) {
-            myadapter = new AdapterSlide(MainActivity.this, objectACityfulls, GPS);
-            binding.viewpager.setAdapter(myadapter);
-        } else {
-            myadapter.notifyDataSetChanged();
-            binding.viewpager.setAdapter(myadapter);
-        }
     }
 
     @Override
@@ -408,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
         setAdapterNew(true);
         //Cập nhật lúc
         binding.tvTimeLoad.setText(objectACityfulls.get(0).getTimeupdate());
-        save(objectACity);
+        save(objectACityfulls);
     }
 
     @Override
@@ -427,14 +420,24 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
     }
 
     @Override
-    public void loadlocation(ObjectACity objectACity) {
-        objectACityfulls.add(objectACity);
+    public void loadByGPS(ObjectACity objectACity) {
+        objectACityfulls.add(0, objectACity);
         setAdapterNew(true);
-        save(objectACityfulls);
     }
 
     @Override
     public void onMessenger(String mes) {
         Toast.makeText(MainActivity.this, mes, Toast.LENGTH_SHORT).show();
     }
+
+    private void setAdapterNew(boolean newOrOld) {
+        if (newOrOld) {
+            myadapter = new AdapterSlide(MainActivity.this, objectACityfulls, GPS);
+            binding.viewpager.setAdapter(myadapter);
+        } else {
+            myadapter.notifyDataSetChanged();
+            binding.viewpager.setAdapter(myadapter);
+        }
+    }
+
 }

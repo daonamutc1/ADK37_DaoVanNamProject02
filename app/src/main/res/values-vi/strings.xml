@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ADK37_DaoVanNamProject</string>
+    <string name="app_name">Thời tiết</string>
     <string name="daily">5 ngày</string>
     <string name="hourly">Hàng giờ</string>
     <string name="humidity">Độ ẩm</string>

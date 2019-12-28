@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ADK37_DaoVanNamProject</string>
+    <string name="app_name">Weather</string>
     <string name="setting">Setting</string>
     <string name="seach">Seach</string>
     <string name="seachByMap">Seach by Map</string>

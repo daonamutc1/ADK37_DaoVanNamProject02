@@ -205,8 +205,6 @@ public class SQLHelper extends SQLiteOpenHelper {
             contentValues.put("timeupdate", objectACity.getTimeupdate());
             contentValues.put("unit", objectACity.getUnit());
             contentValues.put("idCity", objectACity.getID());
-            int n = objectACity.getID();
-            int m = n;
             sqLiteDatabase.insert(Defile.DB_NAME_TABLE, null, contentValues);
             closeDB();
         }
