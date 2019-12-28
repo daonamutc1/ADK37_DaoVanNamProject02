@@ -179,11 +179,11 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
                                 save(objectACityfulls);
                                 break;
                             case R.id.menuXoa:
-                                presenterMain.saveNameCity.remove(pagenumber - 1);
-                                presenterMain.arrayID.remove(pagenumber - 1);
-                                save(objectACityfulls);
+                                presenterMain.objectACityfull.clear();
                                 int xoa = pagenumber;
                                 objectACityfulls.remove(pagenumber);
+                                presenterMain.objectACityfull.addAll(objectACityfulls);
+                                save(objectACityfulls);
                                 setAdapterNew(false);
                                 if (xoa <= presenterMain.saveNameCity.size()) {
                                     binding.viewpager.setCurrentItem(xoa);
@@ -247,6 +247,10 @@ public class MainActivity extends AppCompatActivity implements InterfaceMain {
         });
     }
     private void save(ArrayList<ObjectACity>listSave) {
+//        Đang bị lỗi lưu thừa vị trí hiện tại
+//        if(GPS){
+//            listSave.remove(listSave.size()-1);
+//        }
         sqlHelper.deleteNoteAll();
         sqlHelper.insertProduct(listSave);
     }
